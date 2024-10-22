@@ -49,6 +49,21 @@
             font-style: italic;
             padding: 20px;
         }
+
+        button {
+            padding: 10px 20px;
+            font-size: 16px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-bottom: 20px;
+        }
+
+        button:hover {
+            background-color: #45a049;
+        }
     </style>
     <script type="module">
         // ตั้งค่าการเชื่อมต่อ Firebase
@@ -95,8 +110,9 @@
         }
     </script>
 </head>
-<body onload="loadCheckIns()">
+<body>
     <h1>ประวัติเช็คชื่อห้องเน็ต</h1>
+    <button onclick="loadCheckIns()">โหลดข้อมูลเช็คชื่อ</button>
     <table border="1" id="checkinTable">
         <tr>
             <th>เลขที่นักเรียน</th>
