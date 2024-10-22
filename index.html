@@ -66,31 +66,35 @@
 
         function loadCheckIns() {
             const checkInsRef = database.ref('student-checkins');
-            checkInsRef.once('value', (snapshot) => {
-                const data = snapshot.val();
-                const table = document.getElementById('checkinTable');
-                table.innerHTML = ''; // Clear the table
+            checkInsRef.once('value')
+                .then((snapshot) => {
+                    const data = snapshot.val();
+                    const table = document.getElementById('checkinTable');
+                    table.innerHTML = ''; // Clear the table
 
-                // สร้าง header ของตาราง
-                const headerRow = table.insertRow();
-                headerRow.insertCell(0).innerText = "เลขที่นักเรียน";
-                headerRow.insertCell(1).innerText = "ชื่อนักเรียน";
-                headerRow.insertCell(2).innerText = "เวลาเช็คชื่อ";
+                    // สร้าง header ของตาราง
+                    const headerRow = table.insertRow();
+                    headerRow.insertCell(0).innerText = "เลขที่นักเรียน";
+                    headerRow.insertCell(1).innerText = "ชื่อนักเรียน";
+                    headerRow.insertCell(2).innerText = "เวลาเช็คชื่อ";
 
-                if (data) {
-                    for (const key in data) {
+                    if (data) {
+                        for (const key in data) {
+                            const row = table.insertRow();
+                            row.insertCell(0).innerText = data[key].StudentNumber;
+                            row.insertCell(1).innerText = data[key].StudentName;
+                            row.insertCell(2).innerText = data[key].CheckInTime;
+                        }
+                    } else {
                         const row = table.insertRow();
-                        row.insertCell(0).innerText = data[key].StudentNumber;
-                        row.insertCell(1).innerText = data[key].StudentName;
-                        row.insertCell(2).innerText = data[key].CheckInTime;
+                        const cell = row.insertCell(0);
+                        cell.colSpan = 3;
+                        cell.innerText = "ไม่พบข้อมูลการเช็คชื่อ";
                     }
-                } else {
-                    const row = table.insertRow();
-                    const cell = row.insertCell(0);
-                    cell.colSpan = 3;
-                    cell.innerText = "ไม่พบข้อมูลการเช็คชื่อ";
-                }
-            });
+                })
+                .catch((error) => {
+                    console.error("Error fetching data:", error);
+                });
         }
     </script>
 </head>
@@ -100,4 +104,3 @@
     <table border="1" id="checkinTable"></table>
 </body>
 </html>
-s
