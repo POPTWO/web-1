@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ประวัติเช็คชื่อห้องเน็ต</title>
+    <link rel="icon" href="https://scontent.fbkk6-2.fna.fbcdn.net/v/t39.30808-6/457509902_17973044849766695_7838770126958484279_n.jpg?_nc_cat=106&ccb=1-7&_nc_sid=127cfc&_nc_eui2=AeET7Uofc0PTVk-dD-UifObvsHfrXVRQ6F6wd-tdVFDoXj9V_OL8wQLjqqXduUQ2lli6LTiWXkgmo45N3aPBd6f0&_nc_ohc=zbZLoepdTnwQ7kNvgHUu6d0&_nc_ht=scontent.fbkk6-2.fna&_nc_gid=ALB8HzSCeCXy4_taV1zV4ns&oh=00_AYDORicGww6nPt30txu5cDVmRVba7x1XOfb_Zbd6L-ZONA&oe=671CEE9C" type="image/x-icon"> <!-- ใส่ที่นี่ -->
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -60,6 +61,26 @@
                 width: 100%;
                 font-size: 14px;
             }
+        }
+        /* Navbar style */
+        .navbar {
+            background-color: #343a40;
+            overflow: hidden;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+        .navbar a {
+            float: left;
+            display: block;
+            color: white;
+            text-align: center;
+            padding: 14px 20px;
+            text-decoration: none;
+            font-size: 17px;
+        }
+        .navbar a:hover {
+            background-color: #575757;
         }
         /* Snowfall effect */
         .snow {
@@ -153,6 +174,11 @@
     </script>
 </head>
 <body>
+    <div class="navbar">
+        <a href="#home">หน้าแรก</a>
+        <a href="#checkin">เช็คชื่อ</a>
+        <a href="#about">เกี่ยวกับ</a>
+    </div>
     <h1>ประวัติเช็คชื่อห้องเน็ต</h1>
     <button onclick="loadCheckIns()">โหลดประวัติการเช็คชื่อ</button>
     <table border="1" id="checkinTable">
