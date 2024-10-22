@@ -9,6 +9,7 @@
             background-color: #f4f4f4;
             text-align: center;
             padding: 20px;
+            overflow: hidden; /* ป้องกันไม่ให้เกิด scrollbar */
         }
         h1 {
             color: #333;
@@ -89,7 +90,6 @@
         const database = firebase.database();
 
         function loadCheckIns() {
-            console.log("loadCheckIns called");
             const checkInsRef = database.ref('student-checkins');
             checkInsRef.on('value', (snapshot) => {
                 const data = snapshot.val();
