@@ -49,7 +49,6 @@
         }
     </style>
     <script>
-        // ตั้งค่าการเชื่อมต่อ Firebase
         const firebaseConfig = {
             apiKey: "AIzaSyCsirKBE3O9HpO9YD9BoiVp8iua5NUFWDE",
             authDomain: "sample-firebase-ai-app-23a31.firebaseapp.com",
@@ -60,7 +59,6 @@
             appId: "1:214209088155:web:a854abf5ab5ae9b7a3543e"
         };
 
-        // Initialize Firebase
         const app = firebase.initializeApp(firebaseConfig);
         const database = firebase.database();
 
@@ -71,13 +69,11 @@
                 const table = document.getElementById('checkinTable');
                 table.innerHTML = ''; // Clear the table
 
-                // Create table header
                 const headerRow = table.insertRow();
                 headerRow.insertCell(0).innerText = "เลขที่นักเรียน";
                 headerRow.insertCell(1).innerText = "ชื่อนักเรียน";
                 headerRow.insertCell(2).innerText = "เวลาเช็คชื่อ";
 
-                // Populate the table with data
                 if (data) {
                     for (const key in data) {
                         const row = table.insertRow();
@@ -86,7 +82,6 @@
                         row.insertCell(2).innerText = data[key].CheckInTime;
                     }
                 } else {
-                    // If no data found
                     const row = table.insertRow();
                     const cell = row.insertCell(0);
                     cell.colSpan = 3;
@@ -94,13 +89,11 @@
                 }
             });
         }
-
-        // Load data when the page is loaded
-        window.onload = loadCheckIns;
     </script>
 </head>
 <body>
     <h1>ประวัติเช็คชื่อห้องเน็ต</h1>
+    <button onclick="loadCheckIns()">โหลดประวัติการเช็คชื่อ</button>
     <table border="1" id="checkinTable"></table>
 </body>
 </html>
