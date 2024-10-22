@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ประวัติเช็คชื่อห้องเน็ต</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            background-color: #f9f9f9;
+        }
+
+        h1 {
+            text-align: center;
+            color: #333;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        th, td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+
+        th {
+            background-color: #4CAF50;
+            color: white;
+        }
+
+        tr:hover {
+            background-color: #f1f1f1;
+        }
+    </style>
+    <script src="https://www.gstatic.com/firebasejs/9.1.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.1.0/firebase-database.js"></script>
+    <script>
+        // ตั้งค่าการเชื่อมต่อ Firebase
+        const firebaseConfig = {
+            apiKey: "AIzaSyCsirKBE3O9HpO9YD9BoiVp8iua5NUFWDE",
+            authDomain: "sample-firebase-ai-app-23a31.firebaseapp.com",
+            databaseURL: "https://sample-firebase-ai-app-23a31-default-rtdb.firebaseio.com",
+            projectId: "sample-firebase-ai-app-23a31",
+            storageBucket: "sample-firebase-ai-app-23a31.appspot.com",
+            messagingSenderId: "214209088155",
+            appId: "1:214209088155:web:a854abf5ab5ae9b7a3543e"
+        };
+
+        // Initialize Firebase
+        const app = firebase.initializeApp(firebaseConfig);
+        const database = firebase.database();
+
+        function loadCheckIns() {
+            const checkInsRef = database.ref('student-checkins');
+            checkInsRef.on('value', (snapshot) => {
+                const data = snapshot.val();
+                const table = document.getElementById('checkinTable');
+                table.innerHTML = ''; // Clear the table
+
+                // เพิ่มแถวใหม่ในตารางสำหรับแต่ละข้อมูลที่ดึงมา
+                for (const key in data) {
+                    const row = table.insertRow();
+                    row.insertCell(0).innerText = data[key].StudentNumber;
+                    row.insertCell(1).innerText = data[key].StudentName;
+                    row.insertCell(2).innerText = data[key].CheckInTime;
+                }
+            });
+        }
+    </script>
+</head>
+<body onload="loadCheckIns()">
+    <h1>ประวัติเช็คชื่อห้องเน็ต</h1>
+    <table id="checkinTable">
+        <tr>
+            <th>เลขที่นักเรียน</th>
+            <th>ชื่อนักเรียน</th>
+            <th>เวลาเช็คชื่อ</th>
+        </tr>
+    </table>
+</body>
+</html>
