@@ -3,10 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <title>ประวัติเช็คชื่อห้องเน็ต</title>
-    <script src="https://www.gstatic.com/firebasejs/9.1.0/firebase-app.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.1.0/firebase-database.js"></script>
-    <script>
-        // ตั้งค่าการเชื่อมต่อ Firebase
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/9.1.0/firebase-app.js";
+        import { getDatabase, ref, onValue } from "https://www.gstatic.com/firebasejs/9.1.0/firebase-database.js";
+
         const firebaseConfig = {
             apiKey: "AIzaSyCsirKBE3O9HpO9YD9BoiVp8iua5NUFWDE",
             authDomain: "sample-firebase-ai-app-23a31.firebaseapp.com",
@@ -17,23 +17,29 @@
             appId: "1:214209088155:web:a854abf5ab5ae9b7a3543e"    
         };
 
-        // Initialize Firebase
-        const app = firebase.initializeApp(firebaseConfig);
-        const database = firebase.database();
+        const app = initializeApp(firebaseConfig);
+        const database = getDatabase(app);
 
-        function loadCheckIns() {
-            console.log("loadCheckIns called"); // เพิ่มบรรทัดนี้
-            const checkInsRef = database.ref('student-checkins');
-            checkInsRef.on('value', (snapshot) => {
+        window.loadCheckIns = function() {
+            console.log("loadCheckIns called");
+            const checkInsRef = ref(database, 'student-checkins');
+            onValue(checkInsRef, (snapshot) => {
                 const data = snapshot.val();
                 const table = document.getElementById('checkinTable');
-                table.innerHTML = ''; // Clear the table
+                table.innerHTML = '';
 
-                for (const key in data) {
+                if (data) {
+                    for (const key in data) {
+                        const row = table.insertRow();
+                        row.insertCell(0).innerText = data[key].StudentNumber || "N/A";
+                        row.insertCell(1).innerText = data[key].StudentName || "N/A";
+                        row.insertCell(2).innerText = data[key].CheckInTime || "N/A";
+                    }
+                } else {
                     const row = table.insertRow();
-                    row.insertCell(0).innerText = data[key].StudentNumber;
-                    row.insertCell(1).innerText = data[key].StudentName;
-                    row.insertCell(2).innerText = data[key].CheckInTime;
+                    const cell = row.insertCell(0);
+                    cell.colSpan = 3;
+                    cell.innerText = "ไม่พบข้อมูล";
                 }
             });
         }
