@@ -78,24 +78,29 @@
                 headerRow.insertCell(2).innerText = "เวลาเช็คชื่อ";
 
                 // Populate the table with data
-                for (const key in data) {
+                if (data) {
+                    for (const key in data) {
+                        const row = table.insertRow();
+                        row.insertCell(0).innerText = data[key].StudentNumber;
+                        row.insertCell(1).innerText = data[key].StudentName;
+                        row.insertCell(2).innerText = data[key].CheckInTime;
+                    }
+                } else {
+                    // If no data found
                     const row = table.insertRow();
-                    row.insertCell(0).innerText = data[key].StudentNumber;
-                    row.insertCell(1).innerText = data[key].StudentName;
-                    row.insertCell(2).innerText = data[key].CheckInTime;
+                    const cell = row.insertCell(0);
+                    cell.colSpan = 3;
+                    cell.innerText = "ไม่พบข้อมูลการเช็คชื่อ";
                 }
             });
         }
 
-        // Function to be called when the button is clicked
-        function fetchData() {
-            loadCheckIns(); // Load check-in data
-        }
+        // Load data when the page is loaded
+        window.onload = loadCheckIns;
     </script>
 </head>
-<body onload="loadCheckIns()">
+<body>
     <h1>ประวัติเช็คชื่อห้องเน็ต</h1>
-    <button onclick="fetchData()">ดึงข้อมูลเช็คชื่อ</button>
     <table border="1" id="checkinTable"></table>
 </body>
 </html>
