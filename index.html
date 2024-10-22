@@ -49,6 +49,7 @@
         }
     </style>
     <script>
+        // ตั้งค่าการเชื่อมต่อ Firebase
         const firebaseConfig = {
             apiKey: "AIzaSyCsirKBE3O9HpO9YD9BoiVp8iua5NUFWDE",
             authDomain: "sample-firebase-ai-app-23a31.firebaseapp.com",
@@ -59,16 +60,18 @@
             appId: "1:214209088155:web:a854abf5ab5ae9b7a3543e"
         };
 
+        // Initialize Firebase
         const app = firebase.initializeApp(firebaseConfig);
         const database = firebase.database();
 
         function loadCheckIns() {
             const checkInsRef = database.ref('student-checkins');
-            checkInsRef.on('value', (snapshot) => {
+            checkInsRef.once('value', (snapshot) => {
                 const data = snapshot.val();
                 const table = document.getElementById('checkinTable');
                 table.innerHTML = ''; // Clear the table
 
+                // สร้าง header ของตาราง
                 const headerRow = table.insertRow();
                 headerRow.insertCell(0).innerText = "เลขที่นักเรียน";
                 headerRow.insertCell(1).innerText = "ชื่อนักเรียน";
@@ -97,3 +100,4 @@
     <table border="1" id="checkinTable"></table>
 </body>
 </html>
+s
