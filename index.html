@@ -2,97 +2,78 @@
 <html lang="th">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ประวัติเช็คชื่อห้องเน็ต</title>
     <style>
         body {
             font-family: Arial, sans-serif;
             background-color: #f4f4f4;
-            margin: 0;
+            text-align: center;
             padding: 20px;
-            position: relative;
-            overflow: hidden; /* Prevent scroll bars */
         }
         h1 {
-            text-align: center;
             color: #333;
         }
-        button {
-            display: block;
-            width: 200px;
-            margin: 20px auto;
+        input[type="text"] {
             padding: 10px;
+            margin: 10px;
+            width: 300px;
+        }
+        button {
+            padding: 10px 15px;
+            margin: 10px;
             background-color: #28a745;
             color: white;
             border: none;
-            border-radius: 5px;
-            font-size: 16px;
             cursor: pointer;
-            transition: background-color 0.3s, transform 0.2s; /* Added transform for button */
+            transition: transform 0.2s;
         }
         button:hover {
-            background-color: #218838;
-        }
-        button:active {
-            transform: translateY(2px); /* Move down when clicked */
+            transform: scale(1.1);
         }
         table {
-            width: 80%;
-            margin: 0 auto;
+            margin: 20px auto;
             border-collapse: collapse;
-            background-color: white;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            width: 80%;
         }
         th, td {
-            padding: 12px;
-            text-align: center;
             border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
         }
         th {
-            background-color: #f8f9fa;
-            color: #333;
+            background-color: #28a745;
+            color: white;
         }
         tr:hover {
             background-color: #f1f1f1;
         }
-        @media (max-width: 600px) {
-            table, button {
-                width: 100%;
-                font-size: 14px;
-            }
-        }
-        /* Snowfall effect */
         .snow {
             position: absolute;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            pointer-events: none; /* Allow clicks through snow */
+            pointer-events: none;
+            overflow: hidden;
         }
         .snowflake {
             position: absolute;
-            color: #ffffff;
-            opacity: 0.8;
+            top: -10px;
+            color: white;
             font-size: 1em;
-            pointer-events: none;
+            opacity: 0.9;
             animation: fall linear infinite;
         }
         @keyframes fall {
-            0% {
-                transform: translateY(-10px);
-                opacity: 0.8;
-            }
-            100% {
+            to {
                 transform: translateY(100vh);
-                opacity: 0;
             }
         }
     </style>
-    <script type="module">
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/9.1.0/firebase-app.js";
-        import { getDatabase, ref, onValue } from "https://www.gstatic.com/firebasejs/9.1.0/firebase-database.js";
-
+    <script src="https://www.gstatic.com/firebasejs/9.1.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.1.0/firebase-database.js"></script>
+    <script>
+        // ตั้งค่าการเชื่อมต่อ Firebase
         const firebaseConfig = {
             apiKey: "AIzaSyCsirKBE3O9HpO9YD9BoiVp8iua5NUFWDE",
             authDomain: "sample-firebase-ai-app-23a31.firebaseapp.com",
@@ -100,37 +81,42 @@
             projectId: "sample-firebase-ai-app-23a31",
             storageBucket: "sample-firebase-ai-app-23a31.appspot.com",
             messagingSenderId: "214209088155",
-            appId: "1:214209088155:web:a854abf5ab5ae9b7a3543e"    
+            appId: "1:214209088155:web:a854abf5ab5ae9b7a3543e"
         };
 
-        const app = initializeApp(firebaseConfig);
-        const database = getDatabase(app);
+        // Initialize Firebase
+        const app = firebase.initializeApp(firebaseConfig);
+        const database = firebase.database();
 
-        window.loadCheckIns = function() {
+        function loadCheckIns() {
             console.log("loadCheckIns called");
-            const checkInsRef = ref(database, 'student-checkins');
-            onValue(checkInsRef, (snapshot) => {
+            const checkInsRef = database.ref('student-checkins');
+            checkInsRef.on('value', (snapshot) => {
                 const data = snapshot.val();
                 const table = document.getElementById('checkinTable');
-                table.innerHTML = '';
+                table.innerHTML = ''; // Clear the table
 
-                if (data) {
-                    for (const key in data) {
-                        const row = table.insertRow();
-                        row.insertCell(0).innerText = data[key].StudentNumber || "N/A";
-                        row.insertCell(1).innerText = data[key].StudentName || "N/A";
-                        row.insertCell(2).innerText = data[key].CheckInTime || "N/A";
-                    }
-                } else {
+                for (const key in data) {
                     const row = table.insertRow();
-                    const cell = row.insertCell(0);
-                    cell.colSpan = 3;
-                    cell.innerText = "ไม่พบข้อมูล";
+                    row.insertCell(0).innerText = data[key].StudentNumber;
+                    row.insertCell(1).innerText = data[key].StudentName;
+                    row.insertCell(2).innerText = data[key].CheckInTime;
                 }
             });
         }
 
-        // Snow effect function
+        function searchStudents() {
+            const input = document.getElementById('searchInput').value.toLowerCase();
+            const table = document.getElementById('checkinTable');
+            const rows = table.getElementsByTagName('tr');
+
+            for (let i = 1; i < rows.length; i++) {
+                const cells = rows[i].getElementsByTagName('td');
+                const studentName = cells[1].innerText.toLowerCase();
+                rows[i].style.display = studentName.includes(input) ? '' : 'none';
+            }
+        }
+
         function createSnowflakes() {
             const snowContainer = document.createElement('div');
             snowContainer.classList.add('snow');
@@ -139,21 +125,23 @@
             for (let i = 0; i < 100; i++) {
                 const snowflake = document.createElement('div');
                 snowflake.classList.add('snowflake');
-                snowflake.innerText = '❄'; // Snowflake character
-                snowflake.style.left = Math.random() * 100 + 'vw';
-                snowflake.style.fontSize = Math.random() * 1 + 0.5 + 'em'; // Random size
-                snowflake.style.animationDuration = Math.random() * 3 + 2 + 's'; // Random fall speed
-                snowflake.style.animationDelay = Math.random() * 5 + 's'; // Random start delay
+                snowflake.innerHTML = '❄';
+                snowflake.style.left = Math.random() * window.innerWidth + 'px';
+                snowflake.style.animationDuration = Math.random() * 3 + 2 + 's';
+                snowflake.style.fontSize = Math.random() * 1 + 0.5 + 'em';
                 snowContainer.appendChild(snowflake);
             }
         }
 
-        // Initialize snow effect
-        createSnowflakes();
+        window.onload = function() {
+            createSnowflakes();
+            loadCheckIns();
+        }
     </script>
 </head>
 <body>
     <h1>ประวัติเช็คชื่อห้องเน็ต</h1>
+    <input type="text" id="searchInput" placeholder="ค้นหาชื่อนักเรียน" onkeyup="searchStudents()">
     <button onclick="loadCheckIns()">โหลดประวัติการเช็คชื่อ</button>
     <table border="1" id="checkinTable">
         <tr>
