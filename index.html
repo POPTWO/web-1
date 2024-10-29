@@ -129,7 +129,7 @@
 
         window.loadCheckIns = function() {
             console.log("loadCheckIns called");
-            const checkInsRef = ref(database, 'student-checkout');
+            const checkInsRef = ref(database, 'student-checkins');
             onValue(checkInsRef, (snapshot) => {
                 const data = snapshot.val();
                 const table = document.getElementById('checkinTable');
@@ -150,7 +150,7 @@
                 }
             });
         }
-
+        
         // Snow effect function
         function createSnowflakes() {
             const snowContainer = document.createElement('div');
@@ -174,8 +174,9 @@
     </script>
 </head>
 <body>
-    <h1>ประวัติเช็คชื่อออกห้องเน็ต</h1>
-    <button onclick="loadCheckIns()">โหลดประวัติการออกห้องอินเตอร์เน็ต</button>
+    <h1>ประวัติเช็คชื่อห้องเน็ต</h1>
+    <button onclick="loadCheckIns()">โหลดประวัติการเช็คชื่อ</button>
+    <button onclick="loadCheckout()">โหลดประวัติการลงชื่อออก</button>
     <table border="1" id="checkinTable">
         <tr>
             <th>เลขที่นักเรียน</th>
