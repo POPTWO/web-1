@@ -14,6 +14,7 @@
             padding: 20px;
             position: relative;
             color: #ffffff;
+            overflow: hidden; /* Prevent scrollbars from showing */
         }
         h1, h2 {
             text-align: center;
@@ -186,10 +187,10 @@
 
                 if (data) {
                     for (const key in data) {
-                        // Ensure StudentNumber and StudentName are strings before using toLowerCase
                         const studentNumber = data[key].StudentNumber ? data[key].StudentNumber.toString() : '';
                         const studentName = data[key].StudentName ? data[key].StudentName.toString() : '';
 
+                        // Check if the input matches either the StudentNumber or StudentName
                         if (
                             studentNumber.toLowerCase().includes(input) || 
                             studentName.toLowerCase().includes(input)
@@ -212,7 +213,26 @@
         window.onload = () => {
             loadCheckIns();
             loadCheckOuts();
+            createSnowflakes(); // Create snowflakes on load
         };
+
+        function createSnowflakes() {
+            const snowContainer = document.createElement('div');
+            snowContainer.className = 'snow';
+            document.body.appendChild(snowContainer);
+            const snowflakeCount = 100; // Number of snowflakes
+
+            for (let i = 0; i < snowflakeCount; i++) {
+                const snowflake = document.createElement('div');
+                snowflake.className = 'snowflake';
+                snowflake.innerText = '❄'; // Snowflake character
+                snowflake.style.left = Math.random() * 100 + 'vw';
+                snowflake.style.animationDuration = Math.random() * 3 + 2 + 's'; // Random duration for each snowflake
+                snowflake.style.fontSize = Math.random() * 1.5 + 0.5 + 'em'; // Random size for each snowflake
+                snowflake.style.opacity = Math.random(); // Random opacity for each snowflake
+                snowContainer.appendChild(snowflake);
+            }
+        }
     </script>
 </head>
 <body>
