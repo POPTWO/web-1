@@ -20,6 +20,15 @@
             text-align: center;
             color: #ffffff;
         }
+        input[type="text"] {
+            width: 80%;
+            padding: 10px;
+            margin: 20px auto;
+            display: block;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+        }
         button {
             display: block;
             width: 200px;
@@ -46,6 +55,8 @@
             border-radius: 10px;
             overflow: hidden;
             box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+            max-height: 300px; /* Set a max height for the table */
+            overflow-y: auto; /* Enable scrolling for the table */
         }
         th, td {
             padding: 12px;
@@ -186,20 +197,27 @@
                 `; // Reset table and add header
 
                 if (data) {
+                    let hasResults = false; // Flag to check if results were found
                     for (const key in data) {
                         const studentNumber = data[key].StudentNumber ? data[key].StudentNumber.toString() : '';
-                        const studentName = data[key].StudentName ? data[key].StudentName.toString() : '';
-
-                        // Check if the input matches either the StudentNumber or StudentName
-                        if (
-                            studentNumber.toLowerCase().includes(input) || 
-                            studentName.toLowerCase().includes(input)
-                        ) {
+                        const studentName = data[key].StudentName ? data[key].StudentName.toLowerCase() : '';
+                        if (studentNumber.includes(input) || studentName.includes(input)) {
+                            hasResults = true;
                             const row = table.insertRow();
-                            row.insertCell(0).innerText = studentNumber || "N/A";
-                            row.insertCell(1).innerText = studentName || "N/A";
+                            row.insertCell(0).innerText = studentNumber;
+                            row.insertCell(1).innerText = data[key].StudentName || "N/A";
                             row.insertCell(2).innerText = data[key].CheckInTime || "N/A";
                         }
+                    }
+
+                    // If no results found, display "ไม่พบข้อมูล"
+                    if (!hasResults) {
+                        const row = table.insertRow();
+                        const cell = row.insertCell(0);
+                        cell.colSpan = 3;
+                        cell.innerText = "ไม่พบข้อมูล";
+                    } else {
+                        table.scrollIntoView({ behavior: 'smooth' }); // Scroll to the table when results are found
                     }
                 } else {
                     const row = table.insertRow();
