@@ -151,6 +151,29 @@
             });
         }
 
+        indow.loadCheckout = function() {
+            console.log("loadCheckIns called");
+            const checkInsRef = ref(database, 'student-checkout');
+            onValue(checkInsRef, (snapshot) => {
+                const data = snapshot.val();
+                const table = document.getElementById('checkinTable');
+                table.innerHTML = '';
+
+                if (data) {
+                    for (const key in data) {
+                        const row = table.insertRow();
+                        row.insertCell(0).innerText = data[key].StudentNumber || "N/A";
+                        row.insertCell(1).innerText = data[key].StudentName || "N/A";
+                        row.insertCell(2).innerText = data[key].CheckInTime || "N/A";
+                    }
+                } else {
+                    const row = table.insertRow();
+                    const cell = row.insertCell(0);
+                    cell.colSpan = 3;
+                    cell.innerText = "ไม่พบข้อมูล";
+                }
+            });
+        }
         // Snow effect function
         function createSnowflakes() {
             const snowContainer = document.createElement('div');
@@ -176,6 +199,7 @@
 <body>
     <h1>ประวัติเช็คชื่อห้องเน็ต</h1>
     <button onclick="loadCheckIns()">โหลดประวัติการเช็คชื่อ</button>
+    <button onclick="loadCheckout()">โหลดประวัติการลงชื่อออก</button>
     <table border="1" id="checkinTable">
         <tr>
             <th>เลขที่นักเรียน</th>
