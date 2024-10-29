@@ -151,7 +151,7 @@
                         const row = table.insertRow();
                         row.insertCell(0).innerText = data[key].StudentNumber || "N/A";
                         row.insertCell(1).innerText = data[key].StudentName || "N/A";
-                        row.insertCell(2).innerText = data[key].CheckOutTime || "N/A";
+                        row.insertCell(2).innerText = data[key].CheckOutTime || "N/A"; // Ensure CheckOutTime is displayed
                     }
                 } else {
                     const row = table.insertRow();
@@ -207,7 +207,7 @@
                 const snowflake = document.createElement('div');
                 snowflake.classList.add('snowflake');
                 snowflake.innerText = '❄'; // Snowflake character
-                snowflake.style.left = Math.random() * 100 + 'vw';
+                snowflake.style.left = Math.random() * 100 + 'vw'; // Random horizontal position
                 snowflake.style.fontSize = Math.random() * 1 + 0.5 + 'em'; // Random size
                 snowflake.style.animationDuration = Math.random() * 3 + 2 + 's'; // Random fall speed
                 snowflake.style.animationDelay = Math.random() * 5 + 's'; // Random start time
