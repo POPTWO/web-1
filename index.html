@@ -203,7 +203,7 @@
                 if (data) {
                     for (const key in data) {
                         if (
-                            data[key].StudentNumber.toString().toLowerCase().includes(input) || 
+                            data[key].StudentNumber.toLowerCase().includes(input) || 
                             data[key].StudentName.toLowerCase().includes(input)
                         ) {
                             const row = table.insertRow();
@@ -214,42 +214,3 @@
                     }
                 } else {
                     const row = table.insertRow();
-                    const cell = row.insertCell(0);
-                    cell.colSpan = 3;
-                    cell.innerText = "ไม่พบข้อมูล";
-                }
-            });
-        }
-
-        window.onload = function() {
-            loadCheckIns();
-            loadCheckOuts();
-        };
-    </script>
-</head>
-<body>
-    <h1>ระบบเช็คชื่อห้องเน็ต</h1>
-    <h2>ค้นหานักเรียน</h2>
-    <input type="text" id="searchInput" placeholder="ค้นหานักเรียนโดยเลขที่หรือชื่อ" oninput="searchCheckIns()">
-    
-    <h2>เช็คชื่อ</h2>
-    <table id="checkinTable">
-        <tr>
-            <th>เลขที่นักเรียน</th>
-            <th>ชื่อนักเรียน</th>
-            <th>เวลาเช็คชื่อ</th>
-        </tr>
-        <!-- Check-in data will be populated here -->
-    </table>
-
-    <h2>เช็คชื่อออก</h2>
-    <table id="checkoutTable">
-        <tr>
-            <th>เลขที่นักเรียน</th>
-            <th>ชื่อนักเรียน</th>
-            <th>เวลาเช็คชื่อออก</th>
-        </tr>
-        <!-- Check-out data will be populated here -->
-    </table>
-</body>
-</html>
