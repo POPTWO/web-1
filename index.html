@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ประวัติเช็คชื่อห้องเน็ต</title>
-    <link rel="icon" href="https://scontent.fbkk6-2.fna.fbcdn.net/v/t39.30808-6/457509902_17973044849766695_7838770126958484279_n.jpg?_nc_cat=106&ccb=1-7&_nc_sid=127cfc&_nc_eui2=AeET7Uofc0PTVk-dD-UifObvsHfrXVRQ6F6wd-tdVFDoXj9V_OL8wQLjqqXduUQ2lli6LTiWXkgmo45N3aPBd6f0&_nc_ohc=zbZLoepdTnwQ7kNvgHUu6d0&_nc_ht=scontent.fbkk6-2.fna&_nc_gid=ALB8HzSCeCXy4_taV1zV4ns&oh=00_AYDORicGww6nPt30txu5cDVmRVba7x1XOfb_Zbd6L-ZONA&oe=671CEE9C" type="image/x-icon">
+    <link rel="icon" href="https://scontent.fbkk6-2.fna.fbcdn.net/v/t39.30808-6/457509902_17973044849766695_7838770126958484279_n.jpg?_nc_cat=106&ccb=1-7&_nc_sid=127cfc&_nc_eui2=AeET7Uofc0PTVk-dD-UifObvsHfrXVRQ6F6wd-tdVFDoXj9V_OL8wQLjqqXduUQ2lli6LTiWXkgmo45N3aPBd6f0&_nc_ohc=zbZLoepdTnwQ7kNvgHUu6d0&_nc_ht=scontent.fbkk6-2.fna&_nc_gid=ALB8HzSCeCXy4_taV1zV4ns&oh=00_AYDORicGww6nPt30txu5cDVmRVba7x1XOfb_Zbd6L-ZONA&oe=671CEE9C" type="image/x-icon"> <!-- ใส่ที่นี่ -->
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -12,6 +12,7 @@
             margin: 0;
             padding: 20px;
             position: relative;
+            overflow: hidden; /* Prevent scroll bars */
         }
         h1 {
             text-align: center;
@@ -28,10 +29,13 @@
             border-radius: 5px;
             font-size: 16px;
             cursor: pointer;
-            transition: background-color 0.3s;
+            transition: background-color 0.3s, transform 0.2s; /* Added transform for button */
         }
         button:hover {
             background-color: #218838;
+        }
+        button:active {
+            transform: translateY(2px); /* Move down when clicked */
         }
         table {
             width: 80%;
@@ -57,6 +61,26 @@
                 width: 100%;
                 font-size: 14px;
             }
+        }
+        /* Navbar style */
+        .navbar {
+            background-color: #343a40;
+            overflow: hidden;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+        .navbar a {
+            float: left;
+            display: block;
+            color: white;
+            text-align: center;
+            padding: 14px 20px;
+            text-decoration: none;
+            font-size: 17px;
+        }
+        .navbar a:hover {
+            background-color: #575757;
         }
         /* Snowfall effect */
         .snow {
@@ -103,18 +127,13 @@
         const app = initializeApp(firebaseConfig);
         const database = getDatabase(app);
 
-        function loadCheckIns() {
-            const checkInsRef = ref(database, 'student-checkins');
+        window.loadCheckIns = function() {
+            console.log("loadCheckIns called");
+            const checkInsRef = ref(database, 'student-checkout');
             onValue(checkInsRef, (snapshot) => {
                 const data = snapshot.val();
                 const table = document.getElementById('checkinTable');
-                table.innerHTML = `
-                    <tr>
-                        <th>เลขที่นักเรียน</th>
-                        <th>ชื่อนักเรียน</th>
-                        <th>เวลาเช็คชื่อ</th>
-                    </tr>
-                `; // Reset table and add header
+                table.innerHTML = '';
 
                 if (data) {
                     for (const key in data) {
@@ -122,70 +141,6 @@
                         row.insertCell(0).innerText = data[key].StudentNumber || "N/A";
                         row.insertCell(1).innerText = data[key].StudentName || "N/A";
                         row.insertCell(2).innerText = data[key].CheckInTime || "N/A";
-                    }
-                } else {
-                    const row = table.insertRow();
-                    const cell = row.insertCell(0);
-                    cell.colSpan = 3;
-                    cell.innerText = "ไม่พบข้อมูล";
-                }
-            });
-        }
-
-        function loadCheckOuts() {
-            const checkOutsRef = ref(database, 'student-checkout');
-            onValue(checkOutsRef, (snapshot) => {
-                const data = snapshot.val();
-                const table = document.getElementById('checkoutTable');
-                table.innerHTML = `
-                    <tr>
-                        <th>เลขที่นักเรียน</th>
-                        <th>ชื่อนักเรียน</th>
-                        <th>เวลาเช็คชื่อออก</th>
-                    </tr>
-                `; // Reset table and add header
-
-                if (data) {
-                    for (const key in data) {
-                        const row = table.insertRow();
-                        row.insertCell(0).innerText = data[key].StudentNumber || "N/A";
-                        row.insertCell(1).innerText = data[key].StudentName || "N/A";
-                        row.insertCell(2).innerText = data[key].CheckOutTime || "N/A"; // CheckOutTime แสดงผลที่นี่
-                    }
-                } else {
-                    const row = table.insertRow();
-                    const cell = row.insertCell(0);
-                    cell.colSpan = 3;
-                    cell.innerText = "ไม่พบข้อมูล";
-                }
-            });
-        }
-
-        function searchCheckIns() {
-            const input = document.getElementById('searchInput').value.toLowerCase();
-            const checkInsRef = ref(database, 'student-checkins');
-            onValue(checkInsRef, (snapshot) => {
-                const data = snapshot.val();
-                const table = document.getElementById('checkinTable');
-                table.innerHTML = `
-                    <tr>
-                        <th>เลขที่นักเรียน</th>
-                        <th>ชื่อนักเรียน</th>
-                        <th>เวลาเช็คชื่อ</th>
-                    </tr>
-                `; // Reset table and add header
-
-                if (data) {
-                    for (const key in data) {
-                        if (
-                            data[key].StudentNumber.toLowerCase().includes(input) || 
-                            data[key].StudentName.toLowerCase().includes(input)
-                        ) {
-                            const row = table.insertRow();
-                            row.insertCell(0).innerText = data[key].StudentNumber || "N/A";
-                            row.insertCell(1).innerText = data[key].StudentName || "N/A";
-                            row.insertCell(2).innerText = data[key].CheckInTime || "N/A";
-                        }
                     }
                 } else {
                     const row = table.insertRow();
@@ -208,38 +163,24 @@
                 snowflake.innerText = '❄'; // Snowflake character
                 snowflake.style.left = Math.random() * 100 + 'vw';
                 snowflake.style.fontSize = Math.random() * 1 + 0.5 + 'em'; // Random size
-                snowflake.style.animationDuration = Math.random() * 5 + 5 + 's'; // Random fall duration
-                snowflake.style.animationDelay = Math.random() * 5 + 's'; // Random start time
+                snowflake.style.animationDuration = Math.random() * 3 + 2 + 's'; // Random fall speed
+                snowflake.style.animationDelay = Math.random() * 5 + 's'; // Random start delay
                 snowContainer.appendChild(snowflake);
             }
         }
 
-        window.onload = function() {
-            loadCheckIns();
-            loadCheckOuts();
-            createSnowflakes();
-        }
+        // Initialize snow effect
+        createSnowflakes();
     </script>
 </head>
 <body>
-    <h1>ประวัติเช็คชื่อ</h1>
-    <input type="text" id="searchInput" placeholder="ค้นหานักเรียน..." onkeyup="searchCheckIns()" />
-    
-    <h2>ประวัติเช็คชื่อ</h2>
-    <table id="checkinTable">
+    <h1>ประวัติเช็คชื่อออกห้องเน็ต</h1>
+    <button onclick="loadCheckIns()">โหลดประวัติการออกห้องอินเตอร์เน็ต</button>
+    <table border="1" id="checkinTable">
         <tr>
             <th>เลขที่นักเรียน</th>
             <th>ชื่อนักเรียน</th>
             <th>เวลาเช็คชื่อ</th>
-        </tr>
-    </table>
-
-    <h2>ประวัติเช็คชื่อออก</h2>
-    <table id="checkoutTable">
-        <tr>
-            <th>เลขที่นักเรียน</th>
-            <th>ชื่อนักเรียน</th>
-            <th>เวลาเช็คชื่อออก</th>
         </tr>
     </table>
 </body>
