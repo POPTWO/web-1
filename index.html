@@ -12,7 +12,6 @@
             margin: 0;
             padding: 20px;
             position: relative;
-            overflow: hidden; /* Prevent scroll bars */
         }
         h1 {
             text-align: center;
@@ -104,7 +103,7 @@
         const app = initializeApp(firebaseConfig);
         const database = getDatabase(app);
 
-        window.loadCheckIns = function() {
+        function loadCheckIns() {
             const checkInsRef = ref(database, 'student-checkins');
             onValue(checkInsRef, (snapshot) => {
                 const data = snapshot.val();
@@ -133,7 +132,7 @@
             });
         }
 
-        window.loadCheckOuts = function() {
+        function loadCheckOuts() {
             const checkOutsRef = ref(database, 'student-checkout');
             onValue(checkOutsRef, (snapshot) => {
                 const data = snapshot.val();
@@ -162,7 +161,7 @@
             });
         }
 
-        window.searchCheckIns = function() {
+        function searchCheckIns() {
             const input = document.getElementById('searchInput').value.toLowerCase();
             const checkInsRef = ref(database, 'student-checkins');
             onValue(checkInsRef, (snapshot) => {
