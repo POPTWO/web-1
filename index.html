@@ -173,40 +173,6 @@
             });
         }
 
-        function searchCheckIns() {
-            const input = document.getElementById('searchInput').value.toLowerCase();
-            const checkInsRef = ref(database, 'student-checkins');
-            onValue(checkInsRef, (snapshot) => {
-                const data = snapshot.val();
-                const table = document.getElementById('checkinTable');
-                table.innerHTML = `
-                    <tr>
-                        <th>เลขที่นักเรียน</th>
-                        <th>ชื่อนักเรียน</th>
-                        <th>เวลาเช็คชื่อ</th>
-                    </tr>
-                `; // Reset table and add header
-
-                if (data) {
-                    for (const key in data) {
-                        if (
-                            data[key].StudentNumber.toLowerCase().includes(input) || 
-                            data[key].StudentName.toLowerCase().includes(input)
-                        ) {
-                            const row = table.insertRow();
-                            row.insertCell(0).innerText = data[key].StudentNumber || "N/A";
-                            row.insertCell(1).innerText = data[key].StudentName || "N/A";
-                            row.insertCell(2).innerText = data[key].CheckInTime || "N/A";
-                        }
-                    }
-                } else {
-                    const row = table.insertRow();
-                    const cell = row.insertCell(0);
-                    cell.colSpan = 3;
-                    cell.innerText = "ไม่พบข้อมูล";
-                }
-            });
-        }
 
         // Snow effect function
         function createSnowflakes() {
@@ -236,8 +202,54 @@
 </head>
 <body>
     <h1>ประวัติเช็คชื่อ</h1>
-    <input type="text" id="searchInput" placeholder="ค้นหานักเรียน..." onkeyup="searchCheckIns()" />
+   
+
+    <h2>ค้นหานักเรียน</h2>
+    <div style="text-align: center; margin-bottom: 20px;">
+        <input type="text" id="searchInput" placeholder="ค้นหาชื่อนักเรียน" style="
+            width: 60%;
+            padding: 10px;
+            font-size: 16px;
+            border-radius: 5px;
+            border: none;
+            outline: none;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+            text-align: center;">
+        <button onclick="searchStudent()" style="
+            padding: 10px 15px;
+            background-color: #ff4757;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+            cursor: pointer;
+            margin-left: 10px;
+            transition: background-color 0.3s, transform 0.2s;">
+            ค้นหา
+        </button>
+    </div>
     
+    <script>
+        function searchStudent() {
+            const searchInput = document.getElementById("searchInput").value.toLowerCase();
+            const checkInRows = document.querySelectorAll("#checkinTable tr:not(:first-child)");
+            const checkOutRows = document.querySelectorAll("#checkoutTable tr:not(:first-child)");
+    
+            checkInRows.forEach(row => {
+                const name = row.cells[1].innerText.toLowerCase();
+                row.style.display = name.includes(searchInput) ? '' : 'none';
+            });
+    
+            checkOutRows.forEach(row => {
+                const name = row.cells[1].innerText.toLowerCase();
+                row.style.display = name.includes(searchInput) ? '' : 'none';
+            });
+        }
+    </script>
+
+
+
+
     <h2>ประวัติเช็คชื่อ</h2>
     <table id="checkinTable">
         <tr>
