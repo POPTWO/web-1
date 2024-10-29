@@ -86,6 +86,16 @@
                 opacity: 0;
             }
         }
+        /* Cursor effect */
+        .cursor {
+            position: absolute;
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: rgba(255, 0, 0, 0.7);
+            pointer-events: none; /* Prevent interference with mouse events */
+            transition: transform 0.1s ease;
+        }
     </style>
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/9.1.0/firebase-app.js";
@@ -134,7 +144,7 @@
         }
 
         window.loadCheckOuts = function() {
-            const checkOutsRef = ref(database, 'student-checkout');
+            const checkOutsRef = ref(database, 'student-checkouts'); // Use correct path for checkouts
             onValue(checkOutsRef, (snapshot) => {
                 const data = snapshot.val();
                 const table = document.getElementById('checkoutTable');
@@ -151,7 +161,7 @@
                         const row = table.insertRow();
                         row.insertCell(0).innerText = data[key].StudentNumber || "N/A";
                         row.insertCell(1).innerText = data[key].StudentName || "N/A";
-                        row.insertCell(2).innerText = data[key].CheckOutTime || "N/A";
+                        row.insertCell(2).innerText = data[key].CheckOutTime || "N/A"; // Make sure this field is set correctly
                     }
                 } else {
                     const row = table.insertRow();
@@ -207,13 +217,22 @@
                 const snowflake = document.createElement('div');
                 snowflake.classList.add('snowflake');
                 snowflake.innerText = '❄'; // Snowflake character
-                snowflake.style.left = Math.random() * 100 + 'vw';
-                snowflake.style.fontSize = Math.random() * 1 + 0.5 + 'em'; // Random size
+                snowflake.style.left = Math.random() * 100 + 'vw'; // Random horizontal position
+                snowflake.style.fontSize = Math.random() * 10 + 10 + 'px'; // Random size
                 snowflake.style.animationDuration = Math.random() * 3 + 2 + 's'; // Random fall speed
                 snowflake.style.animationDelay = Math.random() * 5 + 's'; // Random start time
                 snowContainer.appendChild(snowflake);
             }
         }
+
+        // Cursor trail effect
+        let cursor = document.createElement('div');
+        cursor.classList.add('cursor');
+        document.body.appendChild(cursor);
+
+        document.addEventListener('mousemove', (e) => {
+            cursor.style.transform = `translate(${e.pageX}px, ${e.pageY}px)`;
+        });
 
         window.onload = function() {
             createSnowflakes();
