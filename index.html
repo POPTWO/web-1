@@ -11,8 +11,6 @@
             background-color: #f4f4f4;
             margin: 0;
             padding: 20px;
-            position: relative;
-            overflow: hidden;
         }
         h1 {
             text-align: center;
@@ -29,13 +27,10 @@
             border-radius: 5px;
             font-size: 16px;
             cursor: pointer;
-            transition: background-color 0.3s, transform 0.2s;
+            transition: background-color 0.3s;
         }
         button:hover {
             background-color: #218838;
-        }
-        button:active {
-            transform: translateY(2px);
         }
         table {
             width: 80%;
@@ -81,12 +76,17 @@
         const database = getDatabase(app);
 
         window.loadCheckIns = function() {
-            console.log("loadCheckIns called");
             const checkInsRef = ref(database, 'student-checkins');
             onValue(checkInsRef, (snapshot) => {
                 const data = snapshot.val();
                 const table = document.getElementById('checkinTable');
-                table.innerHTML = '';
+                table.innerHTML = `
+                    <tr>
+                        <th>เลขที่นักเรียน</th>
+                        <th>ชื่อนักเรียน</th>
+                        <th>เวลาเช็คชื่อ</th>
+                    </tr>
+                `; // Reset table and add header
 
                 if (data) {
                     for (const key in data) {
@@ -105,19 +105,24 @@
         }
 
         window.loadCheckOuts = function() {
-            console.log("loadCheckOuts called");
             const checkOutsRef = ref(database, 'student-checkout');
             onValue(checkOutsRef, (snapshot) => {
                 const data = snapshot.val();
                 const table = document.getElementById('checkoutTable');
-                table.innerHTML = '';
+                table.innerHTML = `
+                    <tr>
+                        <th>เลขที่นักเรียน</th>
+                        <th>ชื่อนักเรียน</th>
+                        <th>เวลาเช็คชื่อออก</th>
+                    </tr>
+                `; // Reset table and add header
 
                 if (data) {
                     for (const key in data) {
                         const row = table.insertRow();
                         row.insertCell(0).innerText = data[key].StudentNumber || "N/A";
                         row.insertCell(1).innerText = data[key].StudentName || "N/A";
-                        row.insertCell(2).innerText = data[key].CheckOutTime || "N/A";
+                        row.insertCell(2).innerText = data[key].CheckInTime || "N/A";
                     }
                 } else {
                     const row = table.insertRow();
@@ -132,20 +137,8 @@
 <body>
     <h1>ประวัติเช็คชื่อห้องเน็ต</h1>
     <button onclick="loadCheckIns()">โหลดประวัติการเช็คชื่อ</button>
-    <button onclick="loadCheckOuts()">โหลดประวัติการลงชื่อออก</button>
-    <table border="1" id="checkinTable">
-        <tr>
-            <th>เลขที่นักเรียน</th>
-            <th>ชื่อนักเรียน</th>
-            <th>เวลาเช็คชื่อ</th>
-        </tr>
-    </table>
-    <table border="1" id="checkoutTable">
-        <tr>
-            <th>เลขที่นักเรียน</th>
-            <th>ชื่อนักเรียน</th>
-            <th>เวลาเช็คชื่อออก</th>
-        </tr>
-    </table>
+    <button onclick="loadCheckOuts()">โหลดประวัติการเช็คชื่อออก</button>
+    <table border="1" id="checkinTable"></table>
+    <table border="1" id="checkoutTable" style="margin-top: 20px;"></table>
 </body>
 </html>
