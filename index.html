@@ -159,7 +159,7 @@
                         const row = table.insertRow();
                         row.insertCell(0).innerText = data[key].StudentNumber || "N/A";
                         row.insertCell(1).innerText = data[key].StudentName || "N/A";
-                        row.insertCell(2).innerText = data[key].CheckInTime || "N/A"; // CheckOutTime แสดงผลที่นี่
+                        row.insertCell(2).innerText = data[key].CheckOutTime || "N/A"; // CheckOutTime แสดงผลที่นี่
                     }
                 } else {
                     const row = table.insertRow();
@@ -186,13 +186,17 @@
 
                 if (data) {
                     for (const key in data) {
+                        // Ensure StudentNumber and StudentName are strings before using toLowerCase
+                        const studentNumber = data[key].StudentNumber ? data[key].StudentNumber.toString() : '';
+                        const studentName = data[key].StudentName ? data[key].StudentName.toString() : '';
+
                         if (
-                            data[key].StudentNumber.toLowerCase().includes(input) || 
-                            data[key].StudentName.toLowerCase().includes(input)
+                            studentNumber.toLowerCase().includes(input) || 
+                            studentName.toLowerCase().includes(input)
                         ) {
                             const row = table.insertRow();
-                            row.insertCell(0).innerText = data[key].StudentNumber || "N/A";
-                            row.insertCell(1).innerText = data[key].StudentName || "N/A";
+                            row.insertCell(0).innerText = studentNumber || "N/A";
+                            row.insertCell(1).innerText = studentName || "N/A";
                             row.insertCell(2).innerText = data[key].CheckInTime || "N/A";
                         }
                     }
@@ -205,52 +209,29 @@
             });
         }
 
-        // Snow effect function
-        function createSnowflakes() {
-            const snowContainer = document.createElement('div');
-            snowContainer.classList.add('snow');
-            document.body.appendChild(snowContainer);
-
-            for (let i = 0; i < 200; i++) { // Increased snowflakes
-                const snowflake = document.createElement('div');
-                snowflake.classList.add('snowflake');
-                snowflake.innerText = '❄'; // Snowflake character
-                snowflake.style.left = Math.random() * 100 + 'vw';
-                snowflake.style.fontSize = Math.random() * 1 + 0.5 + 'em'; // Random size
-                snowflake.style.color = `rgba(255, 255, 255, ${Math.random() * 0.8 + 0.2})`; // Random color variation
-                snowflake.style.animationDuration = Math.random() * 5 + 5 + 's'; // Random fall duration
-                snowflake.style.animationDelay = Math.random() * 5 + 's'; // Random start time
-                snowContainer.appendChild(snowflake);
-            }
-        }
-
-        window.onload = function() {
+        window.onload = () => {
             loadCheckIns();
             loadCheckOuts();
-            createSnowflakes();
-        }
+        };
     </script>
 </head>
 <body>
-    <h1>ประวัติเช็คชื่อ</h1>
-    <input type="text" id="searchInput" placeholder="ค้นหานักเรียน..." onkeyup="searchCheckIns()" />
-    
-    <h2>ประวัติเช็คชื่อ</h2>
-    <table id="checkinTable">
-        <tr>
-            <th>เลขที่นักเรียน</th>
-            <th>ชื่อนักเรียน</th>
-            <th>เวลาเช็คชื่อ</th>
-        </tr>
-    </table>
+    <h1>ตรวจสอบประวัติเช็คชื่อห้องอินเทอร์เน็ต</h1>
 
-    <h2>ประวัติเช็คชื่อออก</h2>
-    <table id="checkoutTable">
-        <tr>
-            <th>เลขที่นักเรียน</th>
-            <th>ชื่อนักเรียน</th>
-            <th>เวลาเช็คชื่อออก</th>
-        </tr>
-    </table>
+    <div>
+        <input 
+            type="text" 
+            id="searchInput" 
+            placeholder="ค้นหาชื่อนักเรียนหรือเลขที่นักเรียน" 
+            oninput="searchCheckIns()"
+            style="width: 80%; padding: 10px; margin: 20px auto; display: block; border: none; border-radius: 5px; font-size: 16px;"
+        />
+        <table id="checkinTable"></table>
+    </div>
+
+    <div>
+        <h2>ประวัติการเช็คชื่อออก</h2>
+        <table id="checkoutTable"></table>
+    </div>
 </body>
 </html>
